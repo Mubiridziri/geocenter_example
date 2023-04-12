@@ -1,0 +1,4 @@
+geocenter_bundle:
+  license: "..."
+  decoder_url: '%env(resolve:DECODER_URL)%'
+  reverse_decoder_url: '%env(resolve:REVERSE_DECODER_URL)%'
