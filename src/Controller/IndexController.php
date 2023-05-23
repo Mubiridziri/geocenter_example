@@ -14,6 +14,7 @@ use Mubiridziri\Geocenter\Option\VehicleType;
 use Mubiridziri\Geocenter\Service\GeocenterManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -30,6 +31,23 @@ class IndexController extends AbstractController
         $results = $manager->geodecode("Россия, Челябинская область, городской округ Магнитогорский, г Магнитогорск, ул. Рысакова", (new DecoderContext())
             ->setData(GeodecodeData::DATA_ADDRESS)
             ->setFormat(GeodecodeFormat::SIMPLE_FORMAT)
+        );
+        return $this->json($results);
+    }
+
+    /**
+     * @param GeocenterManager $manager
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("/suggest", methods={"GET"})
+     */
+    public function suggestAction(GeocenterManager $manager, Request $request)
+    {
+        $text = $request->query->get('text', '');
+        $results = $manager->suggest($text, new LatLng('53.4045766', '58.969864'), (new DecoderContext())
+            ->setData(GeodecodeData::DATA_ADDRESS)
+            ->setFormat(GeodecodeFormat::GEOJSON_SUGGEST_FORMAT)
+            ->setLimit(100)
         );
         return $this->json($results);
     }
